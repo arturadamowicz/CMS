@@ -1,0 +1,254 @@
+{% extends 'bootstrap/base.html' %} {% import "bootstrap/wtf.html" as wtf %}
+{% block head %}
+{{ super() }}
+{% block title %}{{ title }}{% endblock %}
+{% endblock %}}
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+<div class="navbar-header w-100 d-flex justify-content-between">
+    <a class="navbar-brand btn btn-outline-dark" href="/adminInterface">Edycja użytkowników</a>
+    <a class="navbar-brand btn btn-outline-dark" href="/headerForm">Edycja sekcji header</a>
+    <a class="navbar-brand btn btn-outline-dark" href="/footerForm">Edycja sekcji footer</a>
+    <a class="navbar-brand btn btn-outline-danger" href="/">Wyloguj</a>
+</div>
+</div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div>
+        <div class="flex flex-row">
+            <div class="w-1/3 border border-gray-300">
+                <h3 class="m-4" id="info">
+                </h3>
+                <div class="m-4"><label for="textInput">title<input id="textInput" type="text"
+                                                                   onchange="newsFormValues.title = this.value"
+                                                                   class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"/></label>
+                </div>
+                <div class="m-4"><label for="contentInput">content<input id="contentInput" type="text"
+                                                                   onchange="newsFormValues.content = this.value"
+                                                                   class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"/>
+                </label></div>
+                <div class="m-4"><label for="hrefInput">href<input id="hrefInput" type="text"
+                                                                   onchange="newsFormValues.href = this.value"
+                                                                   class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"/>
+                </label></div>
+                <div class="m-4"><label for="positionInput">position<input id="positionInput" type="number" min="1"
+                                                                           max="0"
+                                                                           onchange="newsFormValues.position = this.value"
+                                                                           class=" form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"/>
+                </label></div>
+
+                <div class="flex flex-row">
+                    <button onclick="newsFormSubmit()"
+                            class="m-4 px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
+                        Dodaj
+                    </button>
+
+                    <div id="buttonContainer" class="flex flex-row hidden">
+                        <button onclick="del()" type="button"
+                                class="m-4 px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out">
+                            Usuń
+                        </button>
+                        <button onclick="cancel()" type="button"
+                                class="m-4 px-6 py-2.5 bg-yellow-400 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-yellow-500 hover:shadow-lg focus:bg-yellow-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-yellow-800 active:shadow-lg transition duration-150 ease-in-out">
+                            Anuluj
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+            <div id="tableHolder" class="w-2/3"></div>
+
+
+            <script>
+                let formStatus = -1 //-1: adding new news; <=0 : editing selected index
+                const buttons = document.getElementById('buttonContainer')
+                const textInput = document.getElementById('textInput')
+                const contentInput = document.getElementById('contentInput')
+                const hrefInput = document.getElementById('hrefInput')
+                const positionInput = document.getElementById('positionInput')
+                const info = document.getElementById('info')
+                const tableHolder = document.getElementById("tableHolder")
+                const newsFormValues = {
+                    title: "",
+                    href: "",
+                    content:"",
+                    position: 0,
+                    dropDown: false
+                }
+                const data_json = (async () => {
+                    const response = await fetch('http://127.0.0.1:5000/data')
+                    return await response.json()
+                })()
+                let jsonFetched
+                let links
+                data_json.then((d) => {
+                    jsonFetched = d
+                    links = d.content.news
+                    generate()
+                })
+
+                function generate() {
+                    let string = ""
+                    string = `
+                    <table class="ml-4 content-list w-100">
+                        <tr>
+                            <th class="border border-slate-300 text-center">title</th>
+                            <th class="border border-slate-300 text-center">content</th>
+                            <th class="border border-slate-300 text-center">href</th>
+                            <th class="border border-slate-300 text-center">edit</th>
+                        </tr>`
+                    links.forEach((content, i) => {
+                        string += `<tr>
+                            <td class="border border-slate-300 text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">${content.title}</td>
+                            <td class="border border-slate-300 text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">${content.content}</td>
+                            <td class="border border-slate-300 text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">${content.href}</td>
+                            <td class="border border-slate-300 text-sm text-gray-900 font-light px-3 py-1 whitespace-nowrap">
+                                <div class="flex flex-row justify-around">
+                                    <button onclick="edit(${i})" class="edit px-4 uppercase">edit</button>
+                                    <div class="flex flex-col">
+                                        <button class="arrow" onclick="swapUp(${i})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                 viewBox="0 0 24 24"
+                                                 stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+                                            </svg>
+                                        </button>
+                                        <button class="arrow" onclick="swapDown(${i})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                 viewBox="0 0 24 24"
+                                                 stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                      d="M19 9l-7 7-7-7"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>`
+                    })
+                    string += "</table>"
+                    tableHolder.innerHTML = string
+                    formRefresh()
+                }
+
+                function swapUp(i) {
+                    if (i !== 0) {
+                        const tmp = links[i - 1]
+                        links[i - 1] = links[i]
+                        links[i] = tmp
+                        generate()
+                    }
+                }
+
+                function swapDown(i) {
+                    if (i !== links.length - 1) {
+                        const tmp = links[i + 1]
+                        links[i + 1] = links[i]
+                        links[i] = tmp
+                        generate()
+                    }
+                }
+
+                function newsFormSubmit() {
+                    const obj = {
+                        title: newsFormValues.title,
+                        content: newsFormValues.content,
+                        href: newsFormValues.href,
+                    }
+                    let position = newsFormValues.position
+
+                    if (formStatus !== -1)
+                        del(formStatus)
+
+                    links.splice(position - 1, 0, obj)
+
+                    console.log(links, links.length + 1)
+                    newsFormValues.title = ""
+                    newsFormValues.href = ""
+                    newsFormValues.content = ""
+                    newsFormValues.position = links.length + 1
+                    generate()
+                }
+
+
+                function edit(i) {
+                    const obj = links[i]
+                    formStatus = i
+                    newsFormValues.title = obj.title
+                    newsFormValues.href = obj.href
+                    newsFormValues.content = obj.content
+                    newsFormValues.position = i + 1
+                    generate()
+                }
+
+                function del() {
+                    links.splice(formStatus, 1)
+                    links = links
+                    cancel()
+                    generate()
+                }
+
+                function cancel() {
+                    newsFormValues.title = ""
+                    newsFormValues.content = ""
+                    newsFormValues.href = ""
+                    newsFormValues.position = links.length + 1
+                    formStatus = -1
+                    generate()
+                }
+
+                function formRefresh() {
+                    textInput.value = newsFormValues.title
+                    hrefInput.value = newsFormValues.href
+                    contentInput.value = newsFormValues.content
+                    positionInput.value = newsFormValues.position
+                    positionInput.max = formStatus === -1 ? links.length + 1 : links.length
+                    buttonsRefresh()
+                    if (formStatus === -1)
+                        info.innerText = "dodawanie nowego elementu"
+                    else
+                        info.innerText = "edytowanie elementu: " + links[formStatus].title
+                }
+
+                function buttonsRefresh() {
+                    if (buttons.classList.contains('hidden')) {
+                        if (formStatus !== -1)
+                            buttons.classList.remove("hidden")
+                    } else if (formStatus === -1)
+                        buttons.classList.add("hidden")
+                }
+
+                function push() {
+                    jsonFetched.content.news = links
+                    const str = JSON.stringify(jsonFetched);
+                    const bytes = new TextEncoder().encode(str);
+                    const blob = new Blob([bytes], {
+                        type: "application/json;charset=utf-8"
+                    });
+
+
+                    let data = new FormData()
+                    data.append('file', blob, "file")
+
+
+                    fetch('http://127.0.0.1:5000/data/update', {
+                        method: "POST",
+                        body: data,
+                    }).then((e)=>
+                    window.location.replace("/adminInterface"))
+                }
+            </script>
+        </div>
+        <div class="m-5">
+            <button onclick="push()" class="btn btn-success w-25 m-auto">
+                Zatwierdź zmiany
+            </button>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.tailwindcss.com"></script>
+{% endblock %}

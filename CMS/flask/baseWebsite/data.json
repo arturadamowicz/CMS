@@ -1,0 +1,109 @@
+{
+  "header": {
+    "logo": {
+      "src":"logo.png",
+      "width": "100px",
+      "height": "100px"
+    },
+    "type": "poziome",
+    "name": "CMS",
+    "menu": {
+      "links": [
+        {
+          "text": "Home",
+          "href": "/"
+        },
+        {
+          "text": "news",
+          "href": "/"
+        },
+        {
+          "text": "gallery",
+          "href": "/",
+          "dropDown": true,
+          "content": [
+            {
+              "text": "2022",
+              "href": "/"
+            },
+            {
+              "text": "2021",
+              "href": "/"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "content": {
+    "slider": {
+      "slides": [
+        {
+          "src": "slider/photo-1.jpg",
+          "title": "This is title - 1 ",
+          "description": "This is description - 1"
+        },
+        {
+          "src": "slider/photo-2.jpg",
+          "title": "This is title - 2",
+          "description": "This is description - 2"
+        },
+        {
+          "src": "slider/photo-3.jpg",
+          "title": "This is title - 3",
+          "description": "This is description - 3"
+        },
+        {
+          "src": "slider/photo-4.jpg",
+          "title": "This is title - 4",
+          "description": "This is description - 4"
+        }
+      ]
+    },
+    "news": [
+      {
+        "title": "This is title 1",
+        "content": "This is content 1",
+        "href": "/"
+      },
+      {
+        "title": "This is title 2",
+        "content": "This is content 2 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+        "href": "/"
+      },
+      {
+        "title": "This is title 3",
+        "content": "This is content 3",
+        "href": "/"
+      }
+    ]
+  },
+  "footer": {
+    "links": [
+      {
+        "text": "Home",
+        "href": "/"
+      },
+      {
+        "text": "news",
+        "href": "/"
+      },
+      {
+        "text": "gallery",
+        "href": "/",
+        "dropDown": true,
+        "content": [
+          {
+            "text": "2022",
+            "href": "/"
+          },
+          {
+            "text": "2021",
+            "href": "/"
+          }
+        ]
+      }
+    ],
+    "companyName": "Filip Płoszaj i Artur Adamowicz"
+  }
+}

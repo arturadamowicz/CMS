@@ -1,0 +1,31 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+
+{% block title %} {{ title }}
+{% endblock %}
+
+{% block navbar %}
+<div class = "navbar navbar-inverse" role = "navigation">
+    <div class = "container">
+        <div class = "navbar-header">
+            <a class = "btn btn-secondary btn-lg" href = "/">Zaloguj się</a>
+            <a class = "btn btn-secondary btn-lg" href = "/register">Zarejestruj się</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <br>
+    <h1 class="text-primary">{{headerOne}}</h1>
+    {{ wtf.quick_form(form, action=action)}}
+
+    {% if info and info != '' %}
+        <h4 class="p-4 rounded-2 h4 bg-warning">{{info}}</h4>
+    {% endif %}
+</div>
+{% endblock %}

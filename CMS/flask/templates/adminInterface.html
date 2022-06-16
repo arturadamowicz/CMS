@@ -1,0 +1,52 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+
+{% block title %} {{ title }}
+{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header w-100 d-flex justify-content-between">
+            <a class="navbar-brand btn btn-outline-dark" href="/headerForm">Edycja sekcji header</a>
+            <a class="navbar-brand btn btn-outline-dark" href="/newsForm">Edycja sekcji news</a>
+            <a class="navbar-brand btn btn-outline-dark" href="/footerForm">Edycja sekcji footer</a>
+            <a class="navbar-brand btn btn-outline-danger" href="/">Wyloguj</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <br>
+    <h1 class="text-primary text-center mb-2">{{headerOne}}</h1>
+    <table class="table table-bordered w-50 m-auto">
+        <tr>
+            <th class = "w-50">Login</th>
+            <th class = "w-50">Hasło</th>
+            <th class = "w-25"></th>
+        </tr>
+        {% for user in users %}
+        <tr class="">
+            <td class=""><p>{{user[0]}}</p></td>
+            <td class=""><p>{{user[1]}}</p></td>
+            <td class="">
+                <form method="POST">
+                    <input type = "hidden" name = "login" value = {{user[0]}}>
+                    <input type = "hidden" name = "passwd" value = {{user[1]}}>
+                    <button class = "btn btn-outline-dark" formaction="/adminEdit">Edytuj</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% if info and info != '' %}
+        <h4 class="p-4 rounded-2 h4 bg-warning">{{info}}</h4>
+    {% endif %}
+</div>
+{% endblock %}
